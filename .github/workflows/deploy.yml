@@ -35,7 +35,7 @@ jobs:
           node-version: lts/*
           cache: 'npm'
       - name: Install build script dependencies
-        run: apt update && apt install -y jq python3 zip
+        run: apt update && apt install -y jq python3 xz zip
       - name: Install Emscripten
         uses: emscripten-core/setup-emsdk@v15
       - name: Verify Emscripten
