@@ -40,10 +40,12 @@ jobs:
         uses: emscripten-core/setup-emsdk@v15
       - name: Verify Emscripten
         run: emcc -v
-      - name: Install dependencies
+      - name: Install NPM dependencies
         run: npm ci
-      - name: Install build dependencies
+      - name: Install Rust dependencies
         run: ./wasm-rust/install-build-deps.sh
+      - name: Checkout submodules
+        run: git submodule init && git submodule update --depth=1
       - name: Test
         run: npm run test
       - name: Build
