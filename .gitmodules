@@ -1,0 +1,6 @@
+[submodule "wasm-cpp/vendor/miniaudio"]
+	path = wasm-cpp/vendor/miniaudio
+	url = https://github.com/mackron/miniaudio
+[submodule "wasm-cpp/vendor/sokol"]
+	path = wasm-cpp/vendor/sokol
+	url = https://github.com/floooh/sokol

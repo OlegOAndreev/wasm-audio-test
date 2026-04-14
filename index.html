@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>WASM Audio Test</title>
+    <link type="text/css" rel="stylesheet" href="/src/assets/main.css" />
+    <link rel="icon" href="data:;base64,=" />
+
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+
+  <body>
+    <div id="container">
+      <h2>WebAssembly Audio Test</h2>
+      <p>This page tests WebAssembly audio with various backends</p>
+
+      <div>
+        <h3>Miniaudio Backend</h3>
+        <button id="miniaudio-start-btn">Start Miniaudio</button>
+        <button id="miniaudio-stop-btn" style="display: none">Stop Miniaudio</button>
+      </div>
+
+      <div>
+        <h3>Sokol Audio Backend</h3>
+        <button id="sokol-start-btn">Start Sokol</button>
+        <button id="sokol-stop-btn" style="display: none">Stop Sokol</button>
+      </div>
+
+      <div>
+        <h3>Rust Tinyaudio Backend</h3>
+        <button id="tinyaudio-start-btn">Start Tinyaudio</button>
+        <button id="tinyaudio-stop-btn" style="display: none">Stop Tinyaudio</button>
+      </div>
+
+      <div>
+        <h3>Rust CPAL Backend</h3>
+        <button id="cpal-start-btn">Start CPAL</button>
+        <button id="cpal-stop-btn" style="display: none">Stop CPAL</button>
+      </div>
+    </div>
+  </body>
+</html>

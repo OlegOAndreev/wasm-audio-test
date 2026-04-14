@@ -1,0 +1,30 @@
+{
+  "name": "wasm-audio-test",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:wasm-cpp && npm run build:wasm-rust && npm run build:ts",
+    "build:ts": "eslint ./src/** && tsc && vite build",
+    "build:wasm-cpp": "./wasm-cpp/run-build.sh",
+    "build:wasm-rust": "./wasm-rust/run-build.sh",
+    "preview": "vite preview",
+    "test": "npm run test:ts",
+    "test:ts": "vitest run"
+  },
+  "devDependencies": {
+    "@eslint/css": "^1.0.0",
+    "@eslint/js": "^10.0.1",
+    "@types/audioworklet": "^0.0.97",
+    "@types/node": "^25.5.0",
+    "eslint": "^10.1.0",
+    "globals": "^17.5.0",
+    "jiti": "^2.6.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.2",
+    "vite": "^8.0.3",
+    "vite-plugin-static-copy": "^4.0.0",
+    "vitest": "^4.1.2"
+  }
+}

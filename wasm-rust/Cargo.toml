@@ -1,0 +1,21 @@
+[package]
+name = "wasm-rust-audio"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+cpal = { version = "0.17", features = ["wasm-bindgen"] }
+js-sys = "0.3"
+tinyaudio = "2.0"
+wasm-bindgen = "=0.2.118"
+
+[dev-dependencies]
+
+[build-dependencies]
+
+[profile.release]
+# Disabled by default for better build times
+# debug = true

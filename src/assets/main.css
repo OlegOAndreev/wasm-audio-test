@@ -1,0 +1,8 @@
+#container {
+    padding: 12px;
+    font-family: sans-serif;
+}
+
+#container > div {
+    margin: 12px 0;
+}
