@@ -17,6 +17,7 @@ constexpr float PI = 3.14159265358979323846f;
 
 const int REQUESTED_SAMPLE_RATE = 48000;
 const int NUM_CHANNELS = 2;
+const int BUFFER_SIZE = 1024;
 
 const float AMPLITUDE = 0.2;
 const float FREQ_1 = 392.0;
@@ -85,6 +86,8 @@ bool start_miniaudio() {
     device_config.sampleRate = REQUESTED_SAMPLE_RATE;
     device_config.dataCallback = miniaudio_data_callback;
     device_config.pUserData = nullptr;
+    device_config.periodSizeInFrames = (ma_uint32)BUFFER_SIZE;
+    printf("Setting miniaudio buffer size to %d\n", BUFFER_SIZE);
     ma_result result = ma_device_init(NULL, &device_config, &g_miniaudio_state.device);
     if (result != MA_SUCCESS) {
         return false;
@@ -139,6 +142,8 @@ bool start_sokol_audio() {
     desc.sample_rate = REQUESTED_SAMPLE_RATE;
     desc.num_channels = NUM_CHANNELS;
     desc.stream_cb = sokol_audio_callback;
+    desc.num_packets = BUFFER_SIZE;
+    printf("Setting sokol buffer size to %d\n", BUFFER_SIZE);
     saudio_setup(&desc);
 
     g_sokol_state.initialized = saudio_isvalid();

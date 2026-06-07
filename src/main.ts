@@ -18,8 +18,19 @@ const tinyaudioStartButton = getById<HTMLButtonElement>('tinyaudio-start-btn');
 const tinyaudioStopButton = getById<HTMLButtonElement>('tinyaudio-stop-btn');
 const cpalStartButton = getById<HTMLButtonElement>('cpal-start-btn');
 const cpalStopButton = getById<HTMLButtonElement>('cpal-stop-btn');
+const latencyReportLabel = getById<HTMLDivElement>('base-latency-label');
+
+function reportLatency() {
+    const ac = new AudioContext();
+    ac.resume();
+    const baseFrames = ac.baseLatency * ac.sampleRate;
+    const outputFrames = ac.outputLatency * ac.sampleRate;
+    latencyReportLabel.textContent = `base ${(ac.baseLatency * 1000).toPrecision(2)}ms (${baseFrames} frames), output ${(ac.outputLatency * 1000).toPrecision(2)}ms (${outputFrames} frames)`;
+}
 
 function disableStartButtons() {
+    // We need to create AudioContext in response to a user action.
+    reportLatency();
     miniaudioStartButton.disabled = true;
     sokolStartButton.disabled = true;
     tinyaudioStartButton.disabled = true;

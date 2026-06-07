@@ -45,6 +45,7 @@ macro_rules! console_error {
 
 const REQUESTED_SAMPLE_RATE: usize = 48000;
 const NUM_CHANNELS: usize = 2;
+const BUFFER_SIZE: usize = 1024;
 
 const AMPLITUDE: f32 = 0.2;
 const FREQ_1: f32 = 392.0;
@@ -76,9 +77,10 @@ pub fn init_tinyaudio() -> Result<TinyaudioState, JsError> {
     let params = tinyaudio::OutputDeviceParameters {
         sample_rate: REQUESTED_SAMPLE_RATE,
         channels_count: NUM_CHANNELS,
-        channel_sample_count: 2048,
+        channel_sample_count: BUFFER_SIZE,
     };
     let state = Arc::new(Mutex::new(TinyaudioStateInner { device: None, phase1: 0.0, phase2: 0.0, phase3: 0.0 }));
+    console_log!("Set tinyaudio buffer size to {}", BUFFER_SIZE);
 
     let state_clone = state.clone();
     let device = tinyaudio::run_output_device(params, move |output| {
@@ -158,9 +160,12 @@ pub fn init_cpal() -> Result<CPALState, JsError> {
     }));
 
     let state_clone = state.clone();
+    console_log!("Got CPAL valid buffer size {:?}, setting to {}", config.buffer_size(), BUFFER_SIZE);
+    let mut stream_config: cpal::StreamConfig = config.into();
+    stream_config.buffer_size = cpal::BufferSize::Fixed(BUFFER_SIZE as u32);
     let stream = device
         .build_output_stream(
-            &config.into(),
+            &stream_config,
             move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
                 cpal_callback(data, &mut state_clone.lock().unwrap());
             },
