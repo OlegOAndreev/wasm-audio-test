@@ -146,9 +146,14 @@ pub fn init_cpal() -> Result<CPALState, JsError> {
     }
     let device = device.unwrap();
     let config = device
-        .default_output_config()
-        .map_err(|e| JsError::new(&format!("Could not default_output_config: {}", e)))?;
-    console_log!("Got sample rate {} from CPAL", config.sample_rate());
+        .supported_output_configs()
+        .map_err(|e| JsError::new(&format!("Could not supported_output_configs: {}", e)))?
+        .find(|config| config.channels() == NUM_CHANNELS as u16)
+        .ok_or_else(|| JsError::new(&format!("Could not find output config with {} channels", NUM_CHANNELS)))?;
+    let config = config
+        .try_with_sample_rate(REQUESTED_SAMPLE_RATE as u32)
+        .unwrap_or_else(|| config.with_max_sample_rate());
+    console_log!("Got sample rate {} and {} channels from CPAL", config.sample_rate(), config.channels());
 
     let state = Arc::new(Mutex::new(CPALStateInner {
         device: device.clone(),
