@@ -25,7 +25,7 @@ function reportLatency() {
     ac.resume();
     const baseFrames = ac.baseLatency * ac.sampleRate;
     const outputFrames = ac.outputLatency * ac.sampleRate;
-    latencyReportLabel.textContent = `base ${(ac.baseLatency * 1000).toPrecision(2)}ms (${baseFrames} frames), output ${(ac.outputLatency * 1000).toPrecision(2)}ms (${outputFrames} frames)`;
+    latencyReportLabel.textContent = `Sample rate ${ac.sampleRate}, base ${(ac.baseLatency * 1000).toPrecision(2)}ms (${baseFrames} frames), output ${(ac.outputLatency * 1000).toPrecision(2)}ms (${outputFrames} frames)`;
 }
 
 function disableStartButtons() {
