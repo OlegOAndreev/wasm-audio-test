@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "format": "npx prettier -w src *.html *.ts && cd wasm-rust && cargo fmt",
     "build": "npm run build:wasm-cpp && npm run build:wasm-rust && npm run build:ts",
     "build:ts": "npm run check:ts && vite build",
     "build:wasm-cpp": "./wasm-cpp/run-build.sh",
