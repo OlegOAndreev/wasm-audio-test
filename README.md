@@ -9,7 +9,7 @@ a few sine tones.
 Install node.js and run to install all the required libraries and scripts.
 ```bash
 npm install
-./wasm/install-build-deps.sh
+./wasm-rust/install-build-deps.sh
 ```
 
 ### Building

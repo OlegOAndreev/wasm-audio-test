@@ -6,11 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run build:wasm-cpp && npm run build:wasm-rust && npm run build:ts",
-    "build:ts": "eslint ./src/** && tsc && vite build",
+    "build:ts": "npm run check:ts && vite build",
     "build:wasm-cpp": "./wasm-cpp/run-build.sh",
     "build:wasm-rust": "./wasm-rust/run-build.sh",
-    "preview": "vite preview",
-    "test": "npm run test:ts",
+    "check:ts": "tsc && eslint src",
+    "test": "npm run check:ts && npm run test:ts",
     "test:ts": "vitest run"
   },
   "devDependencies": {
