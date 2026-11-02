@@ -6,7 +6,7 @@ import initWasmRustModule, {
     init_tinyaudio,
     TinyaudioState,
 } from '../wasm-rust/build/wasm_rust_audio';
-import { getById, setupWindowOnError } from './common-utils';
+import { anyToString, getById, logError, setupWindowOnError } from './common-utils';
 
 let wasmCppModule: WasmCppModule;
 
@@ -22,7 +22,7 @@ const latencyReportLabel = getById<HTMLDivElement>('base-latency-label');
 
 function reportLatency() {
     const ac = new AudioContext();
-    ac.resume();
+    ac.resume().catch((r: unknown) => logError(`Could not resume ${anyToString(r)}`, null));
     const baseFrames = ac.baseLatency * ac.sampleRate;
     const outputFrames = ac.outputLatency * ac.sampleRate;
     latencyReportLabel.textContent = `Sample rate ${ac.sampleRate}, base ${(ac.baseLatency * 1000).toPrecision(2)}ms (${baseFrames} frames), output ${(ac.outputLatency * 1000).toPrecision(2)}ms (${outputFrames} frames)`;
@@ -44,7 +44,7 @@ function enableStartButtons() {
     cpalStartButton.disabled = false;
 }
 
-async function testMiniaudio() {
+function testMiniaudio() {
     if (!wasmCppModule.start_miniaudio()) {
         throw new Error('Failed to initialize miniaudio');
     }
@@ -60,7 +60,7 @@ function stopMiniaudio() {
     enableStartButtons();
 }
 
-async function testSokol() {
+function testSokol() {
     if (!wasmCppModule.start_sokol_audio()) {
         throw new Error('Failed to initialize sokol audio');
     }
@@ -78,7 +78,7 @@ function stopSokol() {
 
 let tinyaudioState: TinyaudioState | null = null;
 
-async function testTinyaudio() {
+function testTinyaudio() {
     tinyaudioState = init_tinyaudio();
     tinyaudioStartButton.style.display = 'none';
     tinyaudioStopButton.style.display = 'block';
@@ -95,7 +95,7 @@ function stopTinyaudio() {
 
 let cpalState: CPALState | null = null;
 
-async function testCPAL() {
+function testCPAL() {
     cpalState = init_cpal();
     cpalStartButton.style.display = 'none';
     cpalStopButton.style.display = 'block';
@@ -115,7 +115,7 @@ async function init() {
     try {
         wasmCppModule = await MainModuleFactory();
     } catch (error) {
-        alert(`WASM init failed: ${error}`);
+        alert(`WASM init failed: ${anyToString(error)}`);
         throw error;
     }
     await initWasmRustModule();
@@ -132,4 +132,4 @@ async function init() {
     cpalStopButton.addEventListener('click', stopCPAL);
 }
 
-init();
+void init();

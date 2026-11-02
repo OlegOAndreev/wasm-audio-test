@@ -1,3 +1,20 @@
+import { showError } from './notify';
+
+// Converts an arbitrary value into a string for messages.
+export function anyToString(value: unknown): string {
+    if (value instanceof Error) {
+        return value.stack ?? `${value.name}: ${value.message}`;
+    }
+    if (typeof value === 'object' && value !== null) {
+        try {
+            return JSON.stringify(value);
+        } catch {
+            // Skip to String()
+        }
+    }
+    return String(value);
+}
+
 // Returns "base name" from file path or URL
 export function getBaseName(name: string): string {
     if (name.endsWith('/')) {
@@ -13,6 +30,7 @@ export function getBaseName(name: string): string {
 }
 
 // Get HTML element by ID with type safety, throws if element not found
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function getById<T extends HTMLElement>(elementId: string): T {
     const element = document.getElementById(elementId);
     if (!element) {
@@ -33,12 +51,12 @@ export function debounce<T extends unknown[]>(
     // If curTimer is not undefined, the function is scheduled to be called.
     let curTimer: ReturnType<typeof setTimeout> | undefined;
     // We store the list of all resolves/rejects.
-    let curResolves: ((value: void) => void)[] = [];
+    let curResolves: (() => void)[] = [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let curRejects: ((reason?: any) => void)[] = [];
 
     return (...args: T): Promise<void> => {
-        let resolve: (value: void) => void;
+        let resolve: () => void;
         let reject: (reason?: unknown) => void;
         const promise = new Promise<void>((res, rej) => {
             resolve = res;
@@ -51,7 +69,7 @@ export function debounce<T extends unknown[]>(
         }
 
         curTimer = setTimeout(async () => {
-            // Copy the resolves/rejects so that they do not get changesd
+            // Copy the resolves/rejects so that they do not get changes
             const resolves = curResolves;
             const rejects = curRejects;
             curResolves = [];
@@ -72,7 +90,7 @@ export function debounce<T extends unknown[]>(
             }
         }, delay);
 
-        return promise as Promise<void>;
+        return promise;
     };
 }
 
@@ -100,7 +118,7 @@ export function withButtonsDisabled<T extends Event>(
 
 // Return a promise which resolves in delay milliseconds.
 export async function sleep(delay: number): Promise<void> {
-    let resolve: (value?: void) => void;
+    let resolve: () => void;
     const promise = new Promise<void>((res) => {
         resolve = res;
     });
@@ -112,17 +130,26 @@ export async function sleep(delay: number): Promise<void> {
 export function setupWindowOnError() {
     window.onerror = (event: Event | string, source?: string, lineno?: number, colno?: number, error?: Error) => {
         console.error('Error:', event, source, lineno, colno, error);
-        alert(`Error: ${event}, ${source}:${lineno}, ${error}`);
+        showError(`Error: ${anyToString(event)}, ${source}:${lineno}, ${anyToString(error)}`);
     };
 
     window.onunhandledrejection = (event: PromiseRejectionEvent) => {
         console.error('Unhandled rejection:', event);
-        alert(`Unhandled rejection: ${event.reason}`);
+        showError(`Unhandled rejection: ${anyToString(event.reason)}`);
     };
 }
 
 // Log error, suitable for global error catching
-export function logError(context: string, event: ErrorEvent) {
-    console.error(`Error from ${context}: ${event.message}, ${event.filename}:${event.lineno}, ${event.error}`);
-    alert(`Error from ${context}: ${event.message}, ${event.filename}:${event.lineno}, ${event.error}`);
+export function logError(context: string, event: ErrorEvent | null) {
+    if (!event) {
+        console.error(`Error: ${context}`);
+        showError(`Error: ${context}`);
+    } else {
+        console.error(
+            `Error from ${context}: ${event.message}, ${event.filename}:${event.lineno}, ${anyToString(event.error)}`,
+        );
+        showError(
+            `Error from ${context}: ${event.message}, ${event.filename}:${event.lineno}, ${anyToString(event.error)}`,
+        );
+    }
 }
