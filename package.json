@@ -11,7 +11,7 @@
     "build:wasm-cpp": "./wasm-cpp/run-build.sh",
     "build:wasm-rust": "./wasm-rust/run-build.sh",
     "check:ts": "tsc && eslint src",
-    "test": "npm run check:ts && npm run test:ts",
+    "test": "npm run build:wasm-cpp && npm run build:wasm-rust && npm run check:ts && npm run test:ts",
     "test:ts": "vitest run"
   },
   "devDependencies": {
