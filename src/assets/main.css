@@ -6,3 +6,9 @@
 #container > div {
     margin: 12px 0;
 }
+
+.build-info {
+  position: fixed;
+  bottom: 12px;
+  font-size: 13px;
+}
