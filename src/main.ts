@@ -19,6 +19,7 @@ const tinyaudioStopButton = getById<HTMLButtonElement>('tinyaudio-stop-btn');
 const cpalStartButton = getById<HTMLButtonElement>('cpal-start-btn');
 const cpalStopButton = getById<HTMLButtonElement>('cpal-stop-btn');
 const latencyReportLabel = getById<HTMLDivElement>('base-latency-label');
+const corsLabel = getById<HTMLElement>('cors-label');
 
 function reportLatency() {
     const ac = new AudioContext();
@@ -121,6 +122,8 @@ async function init() {
     await initWasmRustModule();
 
     setupWindowOnError();
+
+    corsLabel.innerText = `${window.crossOriginIsolated}`;
 
     miniaudioStartButton.addEventListener('click', testMiniaudio);
     miniaudioStopButton.addEventListener('click', stopMiniaudio);
